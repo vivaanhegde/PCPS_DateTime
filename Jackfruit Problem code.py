@@ -1,49 +1,35 @@
 import wx
 from datetime import datetime
 
+class AgeApp(wx.Frame):
+    def __init__(self):
+        super().__init__(None, title="Age Calculator", size=(300, 200))
+        panel = wx.Panel(self)
+        
+        # Label
+        wx.StaticText(panel, label="Enter Year of Birth:", pos=(50, 30))
+
+        # Input box
+        self.year_input = wx.TextCtrl(panel, pos=(50, 55), size=(200, -1))
+
+        # Button
+        btn = wx.Button(panel, label="Calculate Age", pos=(80, 90))
+        btn.Bind(wx.EVT_BUTTON, self.calculate_age)
+
+        # Result
+        self.result = wx.StaticText(panel, label="", pos=(80, 130))
+
+        self.Show()
+
+    def calculate_age(self, event):
+        try:
+            year = int(self.year_input.GetValue())
+            cur_date_year = datetime.now().year
+            age = cur_date_year - year
+            self.result.SetLabel(f"Your age is {age}")
+        except:
+            self.result.SetLabel("Enter valid year!")
+
 app = wx.App()
-
-frame = wx.Frame(None, title="Date & Time", size=(300, 200))
-frame.SetBackgroundColour("Black")
-panel = wx.Panel(frame)
-
-# ----- Headings -----
-
-date_heading = wx.StaticText(panel, label="DATE:", pos=(30, 40))
-date_heading.SetFont(wx.Font(12, wx.FONTFAMILY_DEFAULT, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_BOLD))
-date_heading.SetForegroundColour(wx.Colour(0, 130, 139))
-
-
-time_heading = wx.StaticText(panel, label="TIME:", pos=(30, 90))
-time_heading.SetFont(wx.Font(12, wx.FONTFAMILY_DEFAULT, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_BOLD))
-time_heading.SetForegroundColour( wx.Colour(0, 130, 139))
-
-
-light_blue = wx.Colour(173, 216, 230)   # Light Blue
-
-# ----- Date & Time Values -----
-date_text = wx.StaticText(panel, label="", pos=(100, 40))
-date_text.SetFont(wx.Font(18, wx.FONTFAMILY_DEFAULT, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_BOLD))
-date_text.SetForegroundColour(light_blue)
-
-
-time_text = wx.StaticText(panel, label="", pos=(100, 90))
-time_text.SetFont(wx.Font(18, wx.FONTFAMILY_DEFAULT, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_BOLD))
-time_text.SetForegroundColour(light_blue)
-
-# ----- Update Function -----
-def update_time(event):
-    now = datetime.now()
-    date_text.SetLabel(now.strftime("%d/%m/%Y"))
-    time_text.SetLabel(now.strftime("%H:%M:%S"))
-
-
-# ----- Timer -----
-timer = wx.Timer(frame)
-frame.Bind(wx.EVT_TIMER, update_time, timer)
-timer.Start(1000)
-
-update_time(None)
-
-frame.Show()
+AgeApp()
 app.MainLoop()
